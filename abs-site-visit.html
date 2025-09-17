@@ -3,1035 +3,982 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ABS Architects Invoice</title>
+    <title>Site Visit Form - ABS Architects</title>
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
-        
+
         body {
-            font-family: 'Century Gothic', CenturyGothic, 'AppleGothic', sans-serif;
-            font-size: 9pt;
-            line-height: 1.1;
-            background: #f5f5f5;
-            padding: 20px;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            padding: 10px;
+            color: #2c3e50;
+            line-height: 1.5;
         }
-        
-        .invoice-container {
-            max-width: 210mm;
+
+        .container {
+            max-width: 800px;
             margin: 0 auto;
             background: white;
-            box-shadow: 0 0 15px rgba(0,0,0,0.1);
-            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            overflow: hidden;
         }
-        
-        .invoice-header {
+
+        .header {
+            background: linear-gradient(135deg, #ff7c00, #ff9500);
+            color: white;
+            padding: 25px 20px;
+            text-align: center;
+        }
+
+        .logo { font-size: 2.5rem; font-weight: 900; margin-bottom: 8px; }
+        .subtitle { font-size: 0.9rem; opacity: 0.9; margin-bottom: 5px; }
+        .company { font-size: 1.1rem; font-weight: 700; margin-bottom: 15px; }
+        .title { font-size: 1.4rem; font-weight: 700; }
+
+        .form-content { padding: 20px; }
+
+        .section {
+            margin-bottom: 25px;
+            border: 1px solid #e9ecef;
+            border-radius: 10px;
+            background: white;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+
+        .section-header {
+            background: #f8f9fa;
+            padding: 15px 20px;
+            font-weight: 700;
+            color: #2c3e50;
+            border-bottom: 1px solid #e9ecef;
+            font-size: 1.1rem;
+        }
+
+        .section-content { padding: 20px; }
+
+        .form-group { margin-bottom: 20px; }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 15px;
+        }
+
+        @media (min-width: 768px) {
+            .form-row { grid-template-columns: 1fr 1fr; gap: 20px; }
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #2c3e50;
+            font-size: 0.95rem;
+        }
+
+        .required { color: #e74c3c; }
+
+        input, select, textarea {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e9ecef;
+            border-radius: 8px;
+            font-size: 16px;
+            font-family: inherit;
+            background: white;
+            transition: border-color 0.3s ease;
+            -webkit-appearance: none;
+        }
+
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            border-color: #ff7c00;
+            box-shadow: 0 0 0 3px rgba(255, 124, 0, 0.1);
+        }
+
+        textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+
+        .assessment-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 15px;
+        }
+
+        @media (min-width: 768px) {
+            .assessment-grid { grid-template-columns: repeat(2, 1fr); }
+        }
+
+        @media (min-width: 1024px) {
+            .assessment-grid { grid-template-columns: repeat(3, 1fr); }
+        }
+
+        .assessment-item {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+            border: 1px solid #e9ecef;
+        }
+
+        .dynamic-section {
+            border: 2px dashed #dee2e6;
+            border-radius: 10px;
+            padding: 20px;
+            background: #f8f9fa;
+        }
+
+        .dynamic-header {
             display: flex;
             justify-content: space-between;
-            align-items: flex-start;
+            align-items: center;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .dynamic-title {
+            font-weight: 700;
+            color: #2c3e50;
+            font-size: 1.1rem;
+        }
+
+        .btn {
+            padding: 12px 20px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            min-height: 44px;
+        }
+
+        .btn-add {
+            background: linear-gradient(135deg, #28a745, #20c997);
+            color: white;
+        }
+
+        .btn-add:active {
+            transform: scale(0.98);
+        }
+
+        .item-card {
+            background: white;
+            border: 1px solid #e9ecef;
+            border-radius: 8px;
+            padding: 20px;
             margin-bottom: 15px;
+            position: relative;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
         }
-        
-        .invoice-left {
-            flex: 1;
+
+        .item-controls {
+            position: absolute;
+            top: 15px;
+            right: 15px;
         }
-        
-        .invoice-type-select {
-            font-family: 'Century Gothic', CenturyGothic, 'AppleGothic', sans-serif;
-            font-size: 9pt;
-            padding: 4px 8px;
-            border: 1px solid #333;
-            background: white;
-            margin-bottom: 5px;
-        }
-        
-        .invoice-number-section {
-            font-family: 'Century Gothic', CenturyGothic, 'AppleGothic', sans-serif;
-            font-weight: bold;
-        }
-        
-        .invoice-number-input {
-            font-family: 'Century Gothic', CenturyGothic, 'AppleGothic', sans-serif;
-            border: 1px solid #666;
-            padding: 2px 5px;
-            background: white;
-            font-size: 9pt;
-            margin-left: 3px;
-        }
-        
-        .invoice-right {
-            flex: 1;
-            text-align: right;
-        }
-        
-        .date-section {
-            font-family: 'Century Gothic', CenturyGothic, 'AppleGothic', sans-serif;
-            font-weight: bold;
-        }
-        
-        .date-input {
-            font-family: 'Century Gothic', CenturyGothic, 'AppleGothic', sans-serif;
-            border: 1px solid #666;
-            padding: 2px 5px;
-            font-size: 9pt;
-            background: white;
-            margin-left: 5px;
-        }
-        
-        .client-section {
-            margin-bottom: 15px;
-        }
-        
-        .client-label {
-            font-weight: bold;
-            margin-bottom: 5px;
-        }
-        
-        .client-input {
-            font-family: 'Century Gothic', CenturyGothic, 'AppleGothic', sans-serif;
-            width: 100%;
-            border: 1px dashed #999;
-            padding: 3px 5px;
-            margin-bottom: 2px;
-            background: #f9f9f9;
-            font-size: 9pt;
-        }
-        
-        .gst-section {
-            margin: 8px 0;
-        }
-        
-        .gst-input {
-            font-family: 'Century Gothic', CenturyGothic, 'AppleGothic', sans-serif;
-            border: 1px dashed #999;
-            padding: 3px 5px;
-            background: #f9f9f9;
-            width: 120px;
-            font-size: 9pt;
-        }
-        
-        .invoice-title {
-            font-family: 'Century Gothic', CenturyGothic, 'AppleGothic', sans-serif;
-            text-align: center;
-            font-weight: bold;
-            font-size: 14pt;
-            margin: 15px 0;
-            text-decoration: underline;
-        }
-        
-        .reference-section {
-            margin-bottom: 12px;
-        }
-        
-        .ref-label {
-            font-weight: bold;
-            margin-bottom: 5px;
-        }
-        
-        .ref-textarea {
-            font-family: 'Century Gothic', CenturyGothic, 'AppleGothic', sans-serif;
-            width: 100%;
-            height: 40px;
-            border: 1px dashed #999;
-            padding: 5px;
-            background: #f9f9f9;
-            font-size: 9pt;
-            resize: vertical;
-        }
-        
-        .greeting-section {
-            margin-bottom: 12px;
-        }
-        
-        .greeting-input {
-            font-family: 'Century Gothic', CenturyGothic, 'AppleGothic', sans-serif;
-            width: 100%;
-            border: 1px dashed #999;
-            padding: 3px 5px;
-            background: #f9f9f9;
-            font-size: 9pt;
-        }
-        
-        .controls-panel {
-            background: linear-gradient(135deg, #e3f2fd, #bbdefb);
-            padding: 10px;
-            border-radius: 5px;
-            margin-bottom: 12px;
-            text-align: center;
-            border: 1px solid #90caf9;
-        }
-        
-        .add-service-btn {
-            font-family: 'Century Gothic', CenturyGothic, 'AppleGothic', sans-serif;
-            background: #1976d2;
+
+        .btn-remove {
+            background: #dc3545;
             color: white;
             border: none;
-            padding: 8px 16px;
-            border-radius: 4px;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            font-size: 18px;
             cursor: pointer;
-            font-weight: bold;
-            font-size: 9pt;
-            margin: 3px;
-            transition: background 0.3s;
-        }
-        
-        .add-service-btn:hover {
-            background: #1565c0;
-        }
-        
-        .tax-controls {
-            font-family: 'Century Gothic', CenturyGothic, 'AppleGothic', sans-serif;
-            margin-top: 8px;
-            font-size: 9pt;
-        }
-        
-        .tax-option {
-            margin: 0 15px;
-        }
-        
-        .items-table {
-            font-family: 'Century Gothic', CenturyGothic, 'AppleGothic', sans-serif;
-            width: 100%;
-            border-collapse: collapse;
-            margin-bottom: 15px;
-            font-size: 9pt;
-            border: 3px solid #000;
-        }
-        
-        .items-table th,
-        .items-table td {
-            border: 2px solid #000;
-            padding: 5px;
-            vertical-align: top;
-        }
-        
-        .items-table th {
-            background-color: #f0f0f0;
-            font-weight: bold;
-            text-align: center;
-            vertical-align: middle;
-        }
-        
-        .sr-col {
-            width: 8%;
-            text-align: center;
-        }
-        
-        .desc-col {
-            width: 62%;
-        }
-        
-        .amt-col {
-            width: 30%;
-            text-align: right;
-        }
-        
-        .service-desc-textarea {
-            font-family: 'Century Gothic', CenturyGothic, 'AppleGothic', sans-serif;
-            width: 85%;
-            min-height: 30px;
-            border: 1px dashed #999;
-            padding: 3px 5px;
-            background: #f9f9f9;
-            font-size: 9pt;
-            resize: vertical;
-            overflow: hidden;
-            word-wrap: break-word;
-            line-height: 1.2;
-        }
-        
-        .amount-wrapper {
             display: flex;
             align-items: center;
-            justify-content: flex-end;
+            justify-content: center;
+            min-width: 44px;
+            min-height: 44px;
         }
-        
-        .rupee-symbol {
-            margin-right: 3px;
-            font-weight: bold;
+
+        .btn-remove:active {
+            background: #c82333;
+            transform: scale(0.95);
         }
-        
-        .amount-input {
-            font-family: 'Century Gothic', CenturyGothic, 'AppleGothic', sans-serif;
-            width: 100px;
-            border: 1px solid #999;
-            padding: 3px 5px;
-            text-align: right;
-            font-size: 9pt;
-            background: white;
-        }
-        
-        .rate-input {
-            font-family: 'Century Gothic', CenturyGothic, 'AppleGothic', sans-serif;
-            width: 40px;
-            border: 1px solid #999;
-            padding: 2px 4px;
-            text-align: center;
-            font-size: 9pt;
-            background: white;
-        }
-        
-        .calculated-amount {
-            font-family: 'Century Gothic', CenturyGothic, 'AppleGothic', sans-serif;
-            text-align: right;
-            padding: 4px 6px;
-            background: #f8f8f8;
-            font-weight: 500;
-        }
-        
-        .remove-btn {
-            font-family: 'Century Gothic', CenturyGothic, 'AppleGothic', sans-serif;
-            background: #d32f2f;
-            color: white;
-            border: none;
-            padding: 2px 6px;
-            border-radius: 3px;
-            cursor: pointer;
-            font-size: 8pt;
-            margin-left: 5px;
-        }
-        
-        .remove-btn:hover {
-            background: #b71c1c;
-        }
-        
-        .service-row:nth-child(even) {
-            background-color: #f9f9f9;
-        }
-        
-        .subtotal-row {
-            background-color: #e8f5e8;
-            font-weight: bold;
-        }
-        
-        .tax-row {
-            background-color: #fff3e0;
-        }
-        
-        .fee-received-row {
-            background-color: #fff3cd;
-            font-weight: bold;
-        }
-        
-        .total-row {
-            background-color: #ffebee;
-            font-weight: bold;
-        }
-        
-        .amount-words-row {
-            background-color: #f3e5f5;
-            text-align: center;
-            font-weight: bold;
-        }
-        
-        .footer-section {
-            font-family: 'Century Gothic', CenturyGothic, 'AppleGothic', sans-serif;
-            margin-top: 20px;
-            font-size: 9pt;
-        }
-        
-        .company-details {
-            display: flex;
-            gap: 30px;
-            margin-bottom: 12px;
-        }
-        
-        .payment-info {
-            margin-bottom: 12px;
-        }
-        
-        .bank-details {
-            margin: 8px 0;
-        }
-        
-        .bank-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 10px;
-            margin-top: 8px;
-        }
-        
-        .signature-section {
-            margin-top: 20px;
-            min-height: 60px;
-        }
-        
-        .signature-left {
-            text-align: left;
-            margin-bottom: 50px;
-        }
-        
-        .company-name {
-            text-align: left;
-            font-weight: bold;
-        }
-        
-        .print-button {
-            font-family: 'Century Gothic', CenturyGothic, 'AppleGothic', sans-serif;
-            position: fixed;
-            bottom: 30px;
-            right: 30px;
-            background: linear-gradient(135deg, #4caf50, #45a049);
-            color: white;
-            border: none;
-            padding: 15px 25px;
+
+        .image-upload {
+            margin-top: 15px;
+            padding: 15px;
+            background: #f8f9fa;
+            border: 2px dashed #dee2e6;
             border-radius: 8px;
+            text-align: center;
             cursor: pointer;
-            font-size: 12pt;
-            font-weight: bold;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
-            z-index: 1000;
-            transition: all 0.3s ease;
+            min-height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
-        
-        .print-button:hover {
-            background: linear-gradient(135deg, #45a049, #3d8b40);
-            transform: translateY(-3px);
-            box-shadow: 0 6px 20px rgba(0,0,0,0.4);
+
+        .image-upload:active {
+            border-color: #ff7c00;
+            background: #fff5f0;
         }
-        
-        /* Mobile Responsive */
-        @media (max-width: 768px) {
-            body {
-                padding: 10px;
-            }
-            
-            .invoice-container {
-                padding: 15px;
-            }
-            
-            .invoice-header {
-                flex-direction: column;
-                gap: 10px;
-            }
-            
-            .invoice-right {
-                text-align: left;
-            }
-            
-            .sr-col {
-                width: 10%;
-            }
-            
-            .desc-col {
-                width: 55%;
-            }
-            
-            .amt-col {
-                width: 35%;
-            }
-            
-            .service-desc-textarea {
-                width: 100%;
-                margin-bottom: 5px;
-            }
-            
-            .amount-input {
-                width: 80px;
-            }
-            
-            .company-details {
-                flex-direction: column;
-                gap: 10px;
-            }
-            
-            .bank-grid {
-                grid-template-columns: 1fr;
-                gap: 5px;
-            }
-            
-            .print-button {
-                position: relative;
-                bottom: auto;
-                right: auto;
-                margin: 20px auto;
-                display: block;
+
+        .image-upload input {
+            display: none;
+        }
+
+        .image-upload-label {
+            color: #ff7c00;
+            font-weight: 600;
+            pointer-events: none;
+        }
+
+        .image-preview {
+            margin-top: 10px;
+            display: none;
+            text-align: center;
+        }
+
+        .image-preview img {
+            max-width: 100%;
+            max-height: 200px;
+            border-radius: 8px;
+            border: 1px solid #dee2e6;
+        }
+
+        .image-filename {
+            font-size: 0.85rem;
+            color: #6c757d;
+            margin-top: 8px;
+            font-style: italic;
+        }
+
+        .submit-section {
+            background: #f8f9fa;
+            padding: 25px;
+            text-align: center;
+            border-top: 2px solid #ff7c00;
+        }
+
+        .btn-container {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            align-items: center;
+        }
+
+        @media (min-width: 768px) {
+            .btn-container {
+                flex-direction: row;
+                justify-content: center;
             }
         }
-        
-        /* Print Styles */
-        @media print {
-            @page {
-                size: A4;
-                margin: 4.5cm 1.5cm 1.5cm 1.5cm;
-            }
-            
-            body {
-                font-family: 'Century Gothic', CenturyGothic, 'AppleGothic', sans-serif;
-                background: white;
-                padding: 0;
-                font-size: 9pt;
-                line-height: 1.1;
-            }
-            
-            .invoice-container {
-                font-family: 'Century Gothic', CenturyGothic, 'AppleGothic', sans-serif;
-                max-width: none;
-                width: 100%;
-                box-shadow: none;
-                padding: 0;
-                margin: 0;
-            }
-            
-            /* Hide interactive elements */
-            .controls-panel,
-            .print-button,
-            .remove-btn {
-                display: none !important;
-            }
-            
-            /* Hide dropdown and show selected value */
-            .invoice-type-select {
-                display: none !important;
-            }
-            
-            .invoice-number-section::before {
-                content: attr(data-type) " ";
-                font-weight: bold;
-                font-family: 'Century Gothic', CenturyGothic, 'AppleGothic', sans-serif;
-            }
-            
-            #invoiceTypeDisplay {
-                display: none !important;
-            }
-            
-            /* Remove all input styling and date picker arrows */
-            .invoice-number-input,
-            .date-input,
-            .client-input,
-            .gst-input,
-            .ref-textarea,
-            .greeting-input,
-            .service-desc-textarea,
-            .amount-input,
-            .rate-input {
-                font-family: 'Century Gothic', CenturyGothic, 'AppleGothic', sans-serif !important;
-                border: none !important;
-                background: transparent !important;
-                padding: 0 !important;
-                outline: none !important;
-                -webkit-appearance: none !important;
-                -moz-appearance: none !important;
-                appearance: none !important;
-                resize: none !important;
-            }
-            
-            /* Hide date picker calendar icon */
-            .date-input::-webkit-calendar-picker-indicator {
-                display: none !important;
-                -webkit-appearance: none !important;
-            }
-            
-            .date-input::-webkit-inner-spin-button,
-            .date-input::-webkit-outer-spin-button {
-                -webkit-appearance: none !important;
-                display: none !important;
-            }
-            
-            /* Remove number input arrows */
-            .amount-input::-webkit-outer-spin-button,
-            .amount-input::-webkit-inner-spin-button,
-            .rate-input::-webkit-outer-spin-button,
-            .rate-input::-webkit-inner-spin-button {
-                -webkit-appearance: none !important;
-                margin: 0 !important;
-            }
-            
-            .amount-input[type=number],
-            .rate-input[type=number] {
-                -moz-appearance: textfield !important;
-            }
-            
-            /* Remove footer styling */
-            .footer-section {
-                font-family: 'Century Gothic', CenturyGothic, 'AppleGothic', sans-serif !important;
-                background: transparent !important;
-                border: none !important;
-                padding: 0 !important;
-            }
-            
-            .bank-details {
-                font-family: 'Century Gothic', CenturyGothic, 'AppleGothic', sans-serif !important;
-                background: transparent !important;
-                border: none !important;
-                padding: 0 !important;
-            }
-            
-            /* Compress spacing for print */
-            .invoice-header {
-                margin-bottom: 10px;
-            }
-            
-            .client-section {
-                margin-bottom: 10px;
-            }
-            
-            .invoice-title {
-                margin: 8px 0;
-            }
-            
-            .reference-section {
-                margin-bottom: 8px;
-            }
-            
-            .greeting-section {
-                margin-bottom: 8px;
-            }
-            
-            .items-table {
-                margin-bottom: 10px;
-            }
-            
-            .footer-section {
-                margin-top: 10px;
-            }
-            
-            .signature-section {
-                margin-top: 15px;
-                min-height: 40px;
-            }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #ff7c00, #ff9500);
+            color: white;
+            padding: 15px 30px;
+            font-size: 1.1rem;
+            border-radius: 25px;
+            min-width: 200px;
+        }
+
+        .btn-secondary {
+            background: linear-gradient(135deg, #6c757d, #5a6268);
+            color: white;
+            padding: 12px 25px;
+            border-radius: 20px;
+            min-width: 150px;
+        }
+
+        .btn-primary:active, .btn-secondary:active {
+            transform: scale(0.98);
+        }
+
+        .message {
+            display: none;
+            padding: 15px;
+            margin: 20px;
+            border-radius: 8px;
+            text-align: center;
+            font-weight: 600;
+        }
+
+        .message.success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .message.error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f1b0b7;
+        }
+
+        .message.show { display: block; }
+
+        /* Mobile optimizations */
+        @media (max-width: 480px) {
+            .container { margin: 5px; border-radius: 8px; }
+            .form-content, .section-content { padding: 15px; }
+            .dynamic-header { flex-direction: column; align-items: stretch; }
+            .btn-add { width: 100%; }
         }
     </style>
 </head>
 <body>
-    <div class="invoice-container">
-        <!-- Header Section -->
-        <div class="invoice-header">
-            <div class="invoice-left">
-                <select class="invoice-type-select" id="invoiceType" onchange="updateInvoiceTitle()">
-                    <option value="Invoice">Invoice</option>
-                    <option value="Proforma Invoice">Proforma Invoice</option>
-                </select>
-                <div class="invoice-number-section" id="invoiceNumberSection" data-type="Invoice">
-                    <span id="invoiceTypeDisplay">Invoice</span>
-                    <input type="text" class="invoice-number-input" id="invoiceNumber" value="/08/09/2025/PMC">
-                </div>
-            </div>
-            <div class="invoice-right">
-                <div class="date-section">
-                    <strong>Date:</strong>
-                    <input type="date" class="date-input" id="invoiceDate" value="2025-09-08">
-                </div>
-            </div>
+    <div class="container">
+        <div class="header">
+            <div class="logo">ABS</div>
+            <div class="subtitle">ARCHITECTURE - BUILDINGS & SPACES</div>
+            <div class="company">ARCHITECTS</div>
+            <div class="title">Site Visit Observations Form</div>
         </div>
 
-        <!-- Client Details -->
-        <div class="client-section">
-            <div class="client-label">To,</div>
-            <input type="text" class="client-input" value="THE HON. CHAIRMAN/SECRETARY/TREASURER,">
-            <input type="text" class="client-input" value="Dahisar Purnima Chsl,">
-            <input type="text" class="client-input" value="Wamanrao Samant road, Maratha Colony,">
-            <input type="text" class="client-input" value="Dahisar - East,">
-            <input type="text" class="client-input" value="Mumbai-400068.">
-            <div class="gst-section">
-                <strong>GST NO. :</strong>
-                <input type="text" class="gst-input" value="N.A">
-            </div>
-        </div>
+        <div id="successMessage" class="message success"></div>
+        <div id="errorMessage" class="message error"></div>
 
-        <!-- Invoice Title -->
-        <div class="invoice-title" id="invoiceTitleDisplay">INVOICE</div>
-
-        <!-- Reference Section -->
-        <div class="reference-section">
-            <div class="ref-label">Ref: -</div>
-            <textarea class="ref-textarea">Proposed Redevelopment of your Society known as "Dahisar Purnima Co-Op-Hsg. Soc. Ltd." Located at Wamanrao Samant road, Maratha Colony, Dahisar (E), Mumbai – 400 068.</textarea>
-        </div>
-
-        <!-- Greeting -->
-        <div class="greeting-section">
-            <input type="text" class="greeting-input" value="Dear Sir / Madam, Following are the details.">
-        </div>
-
-        <!-- Controls Section -->
-        <div class="controls-panel">
-            <button class="add-service-btn" onclick="addNewServiceItem()">+ Add Service Item</button>
-            <div class="tax-controls">
-                <strong>Tax Type:</strong>
-                <label class="tax-option">
-                    <input type="radio" name="taxType" value="cgst-sgst" checked onchange="updateTaxType()"> CGST + SGST
-                </label>
-                <label class="tax-option">
-                    <input type="radio" name="taxType" value="igst" onchange="updateTaxType()"> IGST
-                </label>
-            </div>
-        </div>
-
-        <!-- Items Table -->
-        <table class="items-table">
-            <thead>
-                <tr>
-                    <th class="sr-col">Sr.No.</th>
-                    <th class="desc-col">Description</th>
-                    <th class="amt-col">Amount ₹</th>
-                </tr>
-            </thead>
-            <tbody id="itemsTableBody">
-                <tr class="service-row">
-                    <td class="sr-col">1</td>
-                    <td class="desc-col">
-                        <textarea class="service-desc-textarea" oninput="autoResize(this)">Professional Charges for feasibility report</textarea>
-                    </td>
-                    <td class="amt-col">
-                        <div class="amount-wrapper">
-                            <span class="rupee-symbol">₹</span>
-                            <input type="text" class="amount-input" value="20,000.00" onchange="formatAmountInput(this); calculateTotals()" oninput="formatAmountInput(this)">
+        <div class="form-content">
+            <form id="siteVisitForm">
+                <!-- Project Information -->
+                <div class="section">
+                    <div class="section-header">Project Information</div>
+                    <div class="section-content">
+                        <div class="form-group">
+                            <label for="projectDetails">Project Details <span class="required">*</span></label>
+                            <textarea id="projectDetails" name="projectDetails" required 
+                                placeholder="Enter project name, description, location, and other relevant details"></textarea>
                         </div>
-                    </td>
-                </tr>
-                <tr class="subtotal-row" id="subtotalRow" style="display: none;">
-                    <td class="sr-col" id="subtotalSrNo">2</td>
-                    <td class="desc-col"><strong>Sub Total</strong></td>
-                    <td class="amt-col">
-                        <div class="calculated-amount" id="subtotalAmount"><strong>₹ 20,000.00</strong></div>
-                    </td>
-                </tr>
-                <tr class="tax-row" id="tax1Row">
-                    <td class="sr-col" id="tax1SrNo">2</td>
-                    <td class="desc-col">
-                        <span id="tax1Label">CGST</span> @ 
-                        <input type="number" class="rate-input" id="tax1Rate" value="9" step="0.1" min="0" max="50" onchange="calculateTotals()"> %
-                    </td>
-                    <td class="amt-col">
-                        <div class="calculated-amount" id="tax1Amount">₹ 1,800.00</div>
-                    </td>
-                </tr>
-                <tr class="tax-row" id="tax2Row">
-                    <td class="sr-col" id="tax2SrNo">3</td>
-                    <td class="desc-col">
-                        <span id="tax2Label">SGST</span> @ 
-                        <input type="number" class="rate-input" id="tax2Rate" value="9" step="0.1" min="0" max="50" onchange="calculateTotals()"> %
-                    </td>
-                    <td class="amt-col">
-                        <div class="calculated-amount" id="tax2Amount">₹ 1,800.00</div>
-                    </td>
-                </tr>
-                <tr class="fee-received-row">
-                    <td class="sr-col" id="feeReceivedSrNo">4</td>
-                    <td class="desc-col"><strong>Fee Received</strong></td>
-                    <td class="amt-col">
-                        <div class="amount-wrapper">
-                            <span class="rupee-symbol">₹</span>
-                            <input type="text" class="amount-input" id="feeReceivedAmount" value="0.00" onchange="formatAmountInput(this); calculateTotals()" oninput="formatAmountInput(this)">
+                        
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="visitDate">Visit Date <span class="required">*</span></label>
+                                <input type="date" id="visitDate" name="visitDate" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="visitTime">Visit Time</label>
+                                <input type="text" id="visitTime" name="visitTime" placeholder="e.g., 9:00 AM - 3:00 PM">
+                            </div>
                         </div>
-                    </td>
-                </tr>
-                <tr class="total-row">
-                    <td class="sr-col" id="totalSrNo">5</td>
-                    <td class="desc-col"><strong>Total Balance Due</strong></td>
-                    <td class="amt-col">
-                        <div class="calculated-amount" id="totalAmount"><strong>₹ 23,600.00</strong></div>
-                    </td>
-                </tr>
-                <tr class="amount-words-row">
-                    <td colspan="3" id="amountInWords">
-                        Rupees Twenty Three Thousand Six Hundred Only
-                    </td>
-                </tr>
-            </tbody>
-        </table>
-
-        <!-- Footer Section -->
-        <div class="footer-section">
-            <div class="company-details">
-                <div><strong>GST NO. :</strong> 27ABBPS2865D1ZN</div>
-                <div><strong>PAN NO. :</strong> ABBPS2865D</div>
-            </div>
-            
-            <div class="payment-info">
-                <p>Kindly prepare cheque in the name of ABS ARCHITECTS or NEFT/RTGS as per details given at the bottom of the page.</p>
-                
-                <div class="bank-details">
-                    <strong>Bank Details: ABS ARCHITECTS</strong>
-                    <div class="bank-grid">
-                        <div><strong>Bank:</strong> Bharat Co-op Bank Ltd. Dahisar (E) Branch</div>
-                        <div><strong>A/c No:</strong> 001012100024063</div>
-                        <div><strong>IFSC:</strong> BCBM0000011</div>
                     </div>
                 </div>
-            </div>
-            
-            <div class="signature-section">
-                <div class="signature-left">
-                    <strong>With regards</strong>
+
+                <!-- Site Assessment -->
+                <div class="section">
+                    <div class="section-header">Site Assessment</div>
+                    <div class="section-content">
+                        <div class="assessment-grid">
+                            <div class="assessment-item">
+                                <label for="overallCondition">Overall Site Condition <span class="required">*</span></label>
+                                <select id="overallCondition" name="overallCondition" required>
+                                    <option value="">Select condition</option>
+                                    <option value="excellent">Excellent</option>
+                                    <option value="good">Good</option>
+                                    <option value="fair">Fair</option>
+                                    <option value="poor">Poor</option>
+                                    <option value="critical">Critical</option>
+                                </select>
+                            </div>
+                            
+                            <div class="assessment-item">
+                                <label for="safetyCompliance">Safety Compliance <span class="required">*</span></label>
+                                <select id="safetyCompliance" name="safetyCompliance" required>
+                                    <option value="">Select status</option>
+                                    <option value="fully-compliant">Fully Compliant</option>
+                                    <option value="mostly-compliant">Mostly Compliant</option>
+                                    <option value="partially-compliant">Partially Compliant</option>
+                                    <option value="non-compliant">Non-Compliant</option>
+                                </select>
+                            </div>
+                            
+                            <div class="assessment-item">
+                                <label for="qualityStandard">Quality Standard <span class="required">*</span></label>
+                                <select id="qualityStandard" name="qualityStandard" required>
+                                    <option value="">Select standard</option>
+                                    <option value="exceeds">Exceeds Standards</option>
+                                    <option value="meets">Meets Standards</option>
+                                    <option value="below">Below Standards</option>
+                                    <option value="unacceptable">Unacceptable</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-                <div class="company-name">
-                    <strong>For, ABS ARCHITECTS</strong>
+
+                <!-- Observations & Remarks -->
+                <div class="section">
+                    <div class="section-header">Observations & Remarks</div>
+                    <div class="section-content">
+                        <div class="dynamic-section">
+                            <div class="dynamic-header">
+                                <div class="dynamic-title">Document your detailed observations</div>
+                                <button type="button" class="btn btn-add" id="addObservationBtn">+ Add Observation</button>
+                            </div>
+                            <div id="observationsContainer"></div>
+                        </div>
+                    </div>
                 </div>
+
+                <!-- Visit Done By -->
+                <div class="section">
+                    <div class="section-header">Visit Done By</div>
+                    <div class="section-content">
+                        <div class="dynamic-section">
+                            <div class="dynamic-header">
+                                <div class="dynamic-title">Visitors/Inspectors</div>
+                                <button type="button" class="btn btn-add" id="addVisitorBtn">+ Add Visitor</button>
+                            </div>
+                            <div id="visitorsContainer"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Site Attended By -->
+                <div class="section">
+                    <div class="section-header">Site Attended By</div>
+                    <div class="section-content">
+                        <div class="dynamic-section">
+                            <div class="dynamic-header">
+                                <div class="dynamic-title">Site Representatives</div>
+                                <button type="button" class="btn btn-add" id="addAttendeeBtn">+ Add Attendee</button>
+                            </div>
+                            <div id="attendeesContainer"></div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+        <div class="submit-section">
+            <div class="btn-container">
+                <button type="button" class="btn btn-secondary" id="resetBtn">Reset Form</button>
+                <button type="button" class="btn btn-primary" id="pdfBtn">Generate PDF Report</button>
             </div>
         </div>
     </div>
 
-    <!-- Print Button -->
-    <button class="print-button" onclick="printInvoice()">🖨️ Print Invoice</button>
-
     <script>
-        let serviceItemCounter = 1;
-        
-        // Format amount to Indian currency format
-        function formatToIndianCurrency(amount) {
-            if (isNaN(amount) || amount === '') return '0.00';
-            
-            // Convert to number and format to 2 decimal places
-            let num = parseFloat(amount).toFixed(2);
-            
-            // Split into integer and decimal parts
-            let parts = num.toString().split('.');
-            let integerPart = parts[0];
-            let decimalPart = parts[1];
-            
-            // Apply Indian numbering system (lakhs and crores)
-            let lastThree = integerPart.substring(integerPart.length - 3);
-            let otherNumbers = integerPart.substring(0, integerPart.length - 3);
-            
-            if (otherNumbers !== '') {
-                lastThree = ',' + lastThree;
-            }
-            
-            let result = otherNumbers.replace(/\B(?=(\d{2})+(?!\d))/g, ',') + lastThree;
-            
-            return result + '.' + decimalPart;
+        // Global state
+        let state = {
+            observationCount: 0,
+            visitorCount: 0,
+            attendeeCount: 0
+        };
+
+        // Initialize form
+        function init() {
+            // Set today's date
+            const today = new Date();
+            const dateStr = today.getFullYear() + '-' + 
+                          String(today.getMonth() + 1).padStart(2, '0') + '-' + 
+                          String(today.getDate()).padStart(2, '0');
+            document.getElementById('visitDate').value = dateStr;
+
+            // Add initial items
+            addObservation();
+            addVisitor();
+            addAttendee();
+
+            // Setup event listeners
+            setupEventListeners();
         }
-        
-        // Format amount input with Indian currency format
-        function formatAmountInput(input) {
-            // Remove all non-numeric characters except decimal point
-            let value = input.value.replace(/[^\d.]/g, '');
-            
-            // Handle multiple decimal points
-            let decimalCount = (value.match(/\./g) || []).length;
-            if (decimalCount > 1) {
-                let parts = value.split('.');
-                value = parts[0] + '.' + parts.slice(1).join('');
-            }
-            
-            // Limit decimal places to 2
-            if (value.includes('.')) {
-                let parts = value.split('.');
-                if (parts[1] && parts[1].length > 2) {
-                    parts[1] = parts[1].substring(0, 2);
+
+        // Setup all event listeners
+        function setupEventListeners() {
+            document.getElementById('addObservationBtn').addEventListener('click', addObservation);
+            document.getElementById('addVisitorBtn').addEventListener('click', addVisitor);
+            document.getElementById('addAttendeeBtn').addEventListener('click', addAttendee);
+            document.getElementById('resetBtn').addEventListener('click', resetForm);
+            document.getElementById('pdfBtn').addEventListener('click', generatePDF);
+
+            // Form input listeners
+            document.addEventListener('input', function(e) {
+                if (e.target.matches('input, textarea, select')) {
+                    e.target.style.borderColor = '#e9ecef';
                 }
-                value = parts[0] + '.' + (parts[1] || '');
-            }
-            
-            // Format the number
-            if (value !== '' && !isNaN(value)) {
-                input.value = formatToIndianCurrency(value);
-            } else if (value === '') {
-                input.value = '0.00';
-            }
-        }
-        
-        // Get numeric value from formatted Indian currency
-        function getNumericValue(formattedValue) {
-            if (!formattedValue) return 0;
-            return parseFloat(formattedValue.replace(/[,₹\s]/g, '')) || 0;
-        }
-        
-        // Auto-resize textarea based on content
-        function autoResize(textarea) {
-            textarea.style.height = 'auto';
-            textarea.style.height = Math.max(30, textarea.scrollHeight) + 'px';
-        }
-        
-        // Convert number to words (Indian format)
-        function numberToWords(num) {
-            if (num === 0) return "Zero";
-            
-            const ones = ["", "One", "Two", "Three", "Four", "Five", "Six", "Seven", "Eight", "Nine", "Ten", 
-                         "Eleven", "Twelve", "Thirteen", "Fourteen", "Fifteen", "Sixteen", "Seventeen", "Eighteen", "Nineteen"];
-            const tens = ["", "", "Twenty", "Thirty", "Forty", "Fifty", "Sixty", "Seventy", "Eighty", "Ninety"];
-            
-            function convertHundreds(n) {
-                let result = "";
-                if (n > 99) {
-                    result += ones[Math.floor(n / 100)] + " Hundred ";
-                    n %= 100;
+                
+                // Auto-resize textareas
+                if (e.target.tagName === 'TEXTAREA') {
+                    e.target.style.height = 'auto';
+                    e.target.style.height = e.target.scrollHeight + 'px';
                 }
-                if (n > 19) {
-                    result += tens[Math.floor(n / 10)] + " ";
-                    n %= 10;
-                }
-                if (n > 0) {
-                    result += ones[n] + " ";
-                }
-                return result;
-            }
-            
-            if (num < 0) return "Negative " + numberToWords(-num);
-            
-            let result = "";
-            
-            if (num >= 10000000) {
-                result = convertHundreds(Math.floor(num / 10000000)) + "Crore ";
-                num %= 10000000;
-            }
-            
-            if (num >= 100000) {
-                result += convertHundreds(Math.floor(num / 100000)) + "Lakh ";
-                num %= 100000;
-            }
-            
-            if (num >= 1000) {
-                result += convertHundreds(Math.floor(num / 1000)) + "Thousand ";
-                num %= 1000;
-            }
-            
-            if (num > 0) {
-                result += convertHundreds(num);
-            }
-            
-            return result.trim() + " Only";
-        }
-        
-        // Calculate all totals and taxes
-        function calculateTotals() {
-            const serviceInputs = document.querySelectorAll('.service-row .amount-input');
-            let subtotal = 0;
-            
-            // Calculate subtotal from all service items
-            serviceInputs.forEach(input => {
-                subtotal += getNumericValue(input.value);
             });
-            
-            const tax1Rate = parseFloat(document.getElementById('tax1Rate').value) || 0;
-            const tax2Rate = parseFloat(document.getElementById('tax2Rate').value) || 0;
-            const feeReceived = getNumericValue(document.getElementById('feeReceivedAmount').value);
-            
-            const tax1Amount = (subtotal * tax1Rate) / 100;
-            const tax2Amount = (subtotal * tax2Rate) / 100;
-            const grossTotal = subtotal + tax1Amount + tax2Amount;
-            const balanceDue = grossTotal - feeReceived;
-            
-            // Show/hide subtotal row
-            const subtotalRow = document.getElementById('subtotalRow');
-            if (serviceInputs.length > 1) {
-                subtotalRow.style.display = 'table-row';
-                document.getElementById('subtotalAmount').innerHTML = `<strong>₹ ${formatToIndianCurrency(subtotal)}</strong>`;
-            } else {
-                subtotalRow.style.display = 'none';
-            }
-            
-            // Update calculated amounts
-            document.getElementById('tax1Amount').textContent = `₹ ${formatToIndianCurrency(tax1Amount)}`;
-            document.getElementById('tax2Amount').textContent = `₹ ${formatToIndianCurrency(tax2Amount)}`;
-            document.getElementById('totalAmount').innerHTML = `<strong>₹ ${formatToIndianCurrency(balanceDue)}</strong>`;
-            
-            // Update amount in words
-            document.getElementById('amountInWords').textContent = `Rupees ${numberToWords(Math.floor(balanceDue))}`;
-            
-            // Update serial numbers
-            updateSerialNumbers();
         }
-        
-        // Update serial numbers for all rows
-        function updateSerialNumbers() {
-            const serviceRows = document.querySelectorAll('.service-row');
-            const subtotalRow = document.getElementById('subtotalRow');
-            const tax1Row = document.getElementById('tax1Row');
-            const tax2Row = document.getElementById('tax2Row');
-            const feeReceivedRow = document.querySelector('.fee-received-row');
-            const totalRow = document.querySelector('.total-row');
+
+        // Add observation
+        function addObservation() {
+            state.observationCount++;
+            const container = document.getElementById('observationsContainer');
             
-            let srNo = 1;
+            const item = document.createElement('div');
+            item.className = 'item-card';
+            item.id = 'observation-' + state.observationCount;
             
-            // Update service row serial numbers
-            serviceRows.forEach(row => {
-                row.querySelector('.sr-col').textContent = srNo++;
-            });
-            
-            // Update other row serial numbers
-            if (subtotalRow.style.display !== 'none') {
-                document.getElementById('subtotalSrNo').textContent = srNo++;
-            }
-            
-            document.getElementById('tax1SrNo').textContent = srNo++;
-            document.getElementById('tax2SrNo').textContent = srNo++;
-            document.getElementById('feeReceivedSrNo').textContent = srNo++;
-            document.getElementById('totalSrNo').textContent = srNo++;
-        }
-        
-        // Add new service item
-        function addNewServiceItem() {
-            serviceItemCounter++;
-            const tableBody = document.getElementById('itemsTableBody');
-            const subtotalRow = document.getElementById('subtotalRow');
-            
-            const newRow = document.createElement('tr');
-            newRow.className = 'service-row';
-            newRow.innerHTML = `
-                <td class="sr-col">${serviceItemCounter}</td>
-                <td class="desc-col">
-                    <textarea class="service-desc-textarea" oninput="autoResize(this)" placeholder="Enter service description..."></textarea>
-                    <button class="remove-btn" onclick="removeServiceItem(this)">Remove</button>
-                </td>
-                <td class="amt-col">
-                    <div class="amount-wrapper">
-                        <span class="rupee-symbol">₹</span>
-                        <input type="text" class="amount-input" value="0.00" onchange="formatAmountInput(this); calculateTotals()" oninput="formatAmountInput(this)">
-                    </div>
-                </td>
+            item.innerHTML = `
+                <div class="item-controls">
+                    <button type="button" class="btn-remove" data-remove="observation" data-id="${state.observationCount}">×</button>
+                </div>
+                
+                <div class="form-group">
+                    <label for="observationText-${state.observationCount}">Observation ${state.observationCount} <span class="required">*</span></label>
+                    <textarea id="observationText-${state.observationCount}" name="observationText-${state.observationCount}" required 
+                        placeholder="Enter your detailed observation, findings, concerns, or recommendations..." rows="4"></textarea>
+                </div>
+                
+                <div class="form-group">
+                    <label for="observationCategory-${state.observationCount}">Work Category</label>
+                    <select id="observationCategory-${state.observationCount}" name="observationCategory-${state.observationCount}">
+                        <option value="">Select category</option>
+                        <option value="rcc-works">RCC Works</option>
+                        <option value="walls">Walls</option>
+                        <option value="plastering">Plastering</option>
+                        <option value="mep">MEP</option>
+                        <option value="flooring">Flooring</option>
+                        <option value="finishing">Finishing</option>
+                    </select>
+                </div>
+                
+                <div class="image-upload" data-upload="${state.observationCount}">
+                    <input type="file" id="observationImage-${state.observationCount}" accept="image/*" data-preview="${state.observationCount}">
+                    <div class="image-upload-label">Add Supporting Photo (Optional)</div>
+                </div>
+                
+                <div id="imagePreview-${state.observationCount}" class="image-preview">
+                    <img id="previewImg-${state.observationCount}" alt="Preview">
+                    <div id="fileName-${state.observationCount}" class="image-filename"></div>
+                </div>
             `;
             
-            // Insert before subtotal row
-            tableBody.insertBefore(newRow, subtotalRow);
-            calculateTotals();
+            container.appendChild(item);
+            setupItemEventListeners(item, state.observationCount);
         }
-        
-        // Remove service item
-        function removeServiceItem(button) {
-            const row = button.closest('.service-row');
-            row.remove();
-            calculateTotals();
-        }
-        
-        // Update tax type (CGST+SGST vs IGST)
-        function updateTaxType() {
-            const taxType = document.querySelector('input[name="taxType"]:checked').value;
-            const tax1Label = document.getElementById('tax1Label');
-            const tax2Label = document.getElementById('tax2Label');
-            const tax2Row = document.getElementById('tax2Row');
+
+        // Add visitor
+        function addVisitor() {
+            state.visitorCount++;
+            const container = document.getElementById('visitorsContainer');
             
-            if (taxType === 'igst') {
-                tax1Label.textContent = 'IGST';
-                tax2Row.style.display = 'none';
-                document.getElementById('tax1Rate').value = '18';
-            } else {
-                tax1Label.textContent = 'CGST';
-                tax2Label.textContent = 'SGST';
-                tax2Row.style.display = 'table-row';
-                document.getElementById('tax1Rate').value = '9';
-                document.getElementById('tax2Rate').value = '9';
+            const item = document.createElement('div');
+            item.className = 'item-card';
+            item.id = 'visitor-' + state.visitorCount;
+            
+            item.innerHTML = `
+                <div class="item-controls">
+                    <button type="button" class="btn-remove" data-remove="visitor" data-id="${state.visitorCount}">×</button>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="visitorName-${state.visitorCount}">Name <span class="required">*</span></label>
+                        <input type="text" id="visitorName-${state.visitorCount}" name="visitorName-${state.visitorCount}" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="visitorMobile-${state.visitorCount}">Mobile No. <span class="required">*</span></label>
+                        <input type="tel" id="visitorMobile-${state.visitorCount}" name="visitorMobile-${state.visitorCount}" required>
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="visitorEmail-${state.visitorCount}">Email ID <span class="required">*</span></label>
+                        <input type="email" id="visitorEmail-${state.visitorCount}" name="visitorEmail-${state.visitorCount}" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="visitorCompany-${state.visitorCount}">Company/Organization</label>
+                        <input type="text" id="visitorCompany-${state.visitorCount}" name="visitorCompany-${state.visitorCount}">
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="visitorDetails-${state.visitorCount}">Additional Details</label>
+                    <textarea id="visitorDetails-${state.visitorCount}" name="visitorDetails-${state.visitorCount}" 
+                        placeholder="Designation, purpose of visit, department, etc." rows="2"></textarea>
+                </div>
+            `;
+            
+            container.appendChild(item);
+            setupItemEventListeners(item, state.visitorCount);
+        }
+
+        // Add attendee
+        function addAttendee() {
+            state.attendeeCount++;
+            const container = document.getElementById('attendeesContainer');
+            
+            const item = document.createElement('div');
+            item.className = 'item-card';
+            item.id = 'attendee-' + state.attendeeCount;
+            
+            item.innerHTML = `
+                <div class="item-controls">
+                    <button type="button" class="btn-remove" data-remove="attendee" data-id="${state.attendeeCount}">×</button>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="attendeeName-${state.attendeeCount}">Name <span class="required">*</span></label>
+                        <input type="text" id="attendeeName-${state.attendeeCount}" name="attendeeName-${state.attendeeCount}" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="attendeeDesignation-${state.attendeeCount}">Designation <span class="required">*</span></label>
+                        <input type="text" id="attendeeDesignation-${state.attendeeCount}" name="attendeeDesignation-${state.attendeeCount}" required>
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="attendeeCompany-${state.attendeeCount}">Company <span class="required">*</span></label>
+                        <input type="text" id="attendeeCompany-${state.attendeeCount}" name="attendeeCompany-${state.attendeeCount}" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="attendeeEmail-${state.attendeeCount}">Email</label>
+                        <input type="email" id="attendeeEmail-${state.attendeeCount}" name="attendeeEmail-${state.attendeeCount}">
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="attendeeDetails-${state.attendeeCount}">Additional Details</label>
+                    <textarea id="attendeeDetails-${state.attendeeCount}" name="attendeeDetails-${state.attendeeCount}" 
+                        placeholder="Department, contact details, notes, etc." rows="2"></textarea>
+                </div>
+            `;
+            
+            container.appendChild(item);
+            setupItemEventListeners(item, state.attendeeCount);
+        }
+
+        // Setup event listeners for individual items
+        function setupItemEventListeners(item, id) {
+            // Remove button
+            const removeBtn = item.querySelector('.btn-remove');
+            if (removeBtn) {
+                removeBtn.addEventListener('click', function() {
+                    const type = this.dataset.remove;
+                    const id = this.dataset.id;
+                    removeItem(type, id);
+                });
             }
+
+            // Image upload
+            const uploadArea = item.querySelector('.image-upload');
+            const fileInput = item.querySelector('input[type="file"]');
             
-            calculateTotals();
+            if (uploadArea && fileInput) {
+                uploadArea.addEventListener('click', function() {
+                    fileInput.click();
+                });
+                
+                fileInput.addEventListener('change', function() {
+                    const id = this.dataset.preview;
+                    previewImage(id);
+                });
+            }
         }
-        
-        // Update invoice title when type changes
-        function updateInvoiceTitle() {
-            const invoiceType = document.getElementById('invoiceType').value;
-            document.getElementById('invoiceTypeDisplay').textContent = invoiceType;
-            document.getElementById('invoiceTitleDisplay').textContent = invoiceType.toUpperCase();
-            document.getElementById('invoiceNumberSection').setAttribute('data-type', invoiceType);
-        }
-        
-        // Print invoice
-        function printInvoice() {
-            window.print();
-        }
-        
-        // Initialize calculations on page load
-        window.addEventListener('load', function() {
-            calculateTotals();
+
+        // Remove item
+        function removeItem(type, id) {
+            const containers = {
+                observation: 'observationsContainer',
+                visitor: 'visitorsContainer',
+                attendee: 'attendeesContainer'
+            };
             
-            // Format existing amount inputs
-            const amountInputs = document.querySelectorAll('.amount-input');
-            amountInputs.forEach(input => {
-                formatAmountInput(input);
+            const container = document.getElementById(containers[type]);
+            if (container.children.length > 1) {
+                document.getElementById(type + '-' + id).remove();
+            } else {
+                showMessage('At least one ' + type + ' is required.', false);
+            }
+        }
+
+        // Image preview
+        function previewImage(id) {
+            const input = document.getElementById('observationImage-' + id);
+            const preview = document.getElementById('imagePreview-' + id);
+            const img = document.getElementById('previewImg-' + id);
+            const fileName = document.getElementById('fileName-' + id);
+            
+            if (input.files && input.files[0]) {
+                const file = input.files[0];
+                
+                if (file.size > 5 * 1024 * 1024) {
+                    showMessage('Image file too large. Please choose a file under 5MB.', false);
+                    input.value = '';
+                    return;
+                }
+                
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    img.src = e.target.result;
+                    fileName.textContent = file.name;
+                    preview.style.display = 'block';
+                };
+                reader.readAsDataURL(file);
+            } else {
+                preview.style.display = 'none';
+            }
+        }
+
+        // Form validation
+        function validateForm() {
+            const requiredFields = document.querySelectorAll('[required]');
+            let isValid = true;
+            let firstInvalid = null;
+
+            requiredFields.forEach(field => {
+                if (!field.value.trim()) {
+                    isValid = false;
+                    field.style.borderColor = '#e74c3c';
+                    if (!firstInvalid) firstInvalid = field;
+                } else {
+                    field.style.borderColor = '#e9ecef';
+                }
             });
-        });
+
+            if (!isValid && firstInvalid) {
+                firstInvalid.focus();
+                firstInvalid.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }
+
+            return isValid;
+        }
+
+        // Show message
+        function showMessage(message, isSuccess) {
+            const successEl = document.getElementById('successMessage');
+            const errorEl = document.getElementById('errorMessage');
+            
+            successEl.classList.remove('show');
+            errorEl.classList.remove('show');
+            
+            const targetEl = isSuccess ? successEl : errorEl;
+            targetEl.textContent = message;
+            targetEl.classList.add('show');
+            targetEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+
+        // Generate PDF
+        function generatePDF() {
+            if (!validateForm()) {
+                showMessage('Please fill in all required fields marked with *', false);
+                return;
+            }
+
+            const btn = document.getElementById('pdfBtn');
+            const originalText = btn.textContent;
+            btn.textContent = 'Generating...';
+            btn.disabled = true;
+
+            setTimeout(() => {
+                try {
+                    const htmlContent = createPDFContent();
+                    const printWindow = window.open('', '_blank');
+                    
+                    if (printWindow) {
+                        printWindow.document.write(htmlContent);
+                        printWindow.document.close();
+                        
+                        setTimeout(() => {
+                            printWindow.print();
+                            showMessage('PDF opened! Use "Save as PDF" from print options.', true);
+                        }, 1000);
+                    } else {
+                        showMessage('Please allow popups to generate PDF.', false);
+                    }
+                } catch (error) {
+                    showMessage('Error generating PDF: ' + error.message, false);
+                } finally {
+                    btn.textContent = originalText;
+                    btn.disabled = false;
+                }
+            }, 500);
+        }
+
+        // Create PDF content
+        function createPDFContent() {
+            const data = {
+                project: document.getElementById('projectDetails').value,
+                date: new Date(document.getElementById('visitDate').value).toLocaleDateString(),
+                time: document.getElementById('visitTime').value || 'Not specified',
+                condition: document.getElementById('overallCondition').value,
+                safety: document.getElementById('safetyCompliance').value,
+                quality: document.getElementById('qualityStandard').value
+            };
+
+            let html = `
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Site Visit Report</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; line-height: 1.4; }
+        .header { text-align: center; margin-bottom: 20px; border-bottom: 2px solid #ff7c00; padding-bottom: 15px; }
+        .header h1 { color: #ff7c00; margin: 0; font-size: 20px; }
+        .section { margin-bottom: 20px; }
+        .section h3 { color: #2c3e50; border-bottom: 1px solid #ddd; padding-bottom: 5px; }
+        .observation { border: 1px solid #ddd; padding: 10px; margin: 10px 0; border-radius: 5px; }
+        .person-info { margin-bottom: 10px; font-size: 11px; }
+        .footer { text-align: center; margin-top: 30px; border-top: 1px solid #ddd; padding-top: 15px; font-size: 10px; color: #666; }
+        img { max-width: 200px; max-height: 150px; margin: 10px 0; border: 1px solid #ddd; }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>ABS ARCHITECTS</h1>
+        <p>Site Visit Observations Report</p>
+    </div>
+    
+    <div class="section">
+        <h3>Project Information</h3>
+        <p><strong>Project:</strong> ${data.project}</p>
+        <p><strong>Visit Date:</strong> ${data.date}</p>
+        <p><strong>Visit Time:</strong> ${data.time}</p>
+    </div>
+    
+    <div class="section">
+        <h3>Site Assessment</h3>
+        <p><strong>Overall Condition:</strong> ${data.condition.charAt(0).toUpperCase() + data.condition.slice(1)}</p>
+        <p><strong>Safety Compliance:</strong> ${data.safety.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase())}</p>
+        <p><strong>Quality Standard:</strong> ${data.quality.charAt(0).toUpperCase() + data.quality.slice(1)}</p>
+    </div>
+`;
+
+            // Add observations
+            const observations = document.querySelectorAll('#observationsContainer .item-card');
+            if (observations.length > 0) {
+                html += '<div class="section"><h3>Observations & Remarks</h3>';
+                
+                observations.forEach((obs, index) => {
+                    const text = obs.querySelector('[name^="observationText-"]')?.value;
+                    const category = obs.querySelector('[name^="observationCategory-"]')?.value;
+                    const img = obs.querySelector('[id^="previewImg-"]');
+                    const fileInput = obs.querySelector('[id^="observationImage-"]');
+                    
+                    if (text && text.trim()) {
+                        html += `
+                            <div class="observation">
+                                <h4>Observation ${index + 1}</h4>
+                                ${category ? `<p><strong>Category:</strong> ${category.replace(/-/g, ' ').toUpperCase()}</p>` : ''}
+                                <p><strong>Details:</strong> ${text}</p>
+                                ${img && img.src && img.src.startsWith('data:') ? 
+                                  `<img src="${img.src}" alt="Observation Photo"><p><em>Photo: ${fileInput?.files[0]?.name || 'Uploaded image'}</em></p>` : ''}
+                            </div>
+                        `;
+                    }
+                });
+                
+                html += '</div>';
+            }
+
+            // Add visitors
+            const visitors = document.querySelectorAll('#visitorsContainer .item-card');
+            if (visitors.length > 0) {
+                html += '<div class="section"><h3>Visit Done By</h3>';
+                
+                visitors.forEach(visitor => {
+                    const name = visitor.querySelector('[name^="visitorName-"]')?.value;
+                    const mobile = visitor.querySelector('[name^="visitorMobile-"]')?.value;
+                    const email = visitor.querySelector('[name^="visitorEmail-"]')?.value;
+                    const company = visitor.querySelector('[name^="visitorCompany-"]')?.value;
+                    const details = visitor.querySelector('[name^="visitorDetails-"]')?.value;
+                    
+                    if (name && name.trim()) {
+                        html += `
+                            <div class="person-info">
+                                <strong>${name}</strong>
+                                ${mobile ? ` | ${mobile}` : ''}
+                                ${email ? ` | ${email}` : ''}
+                                ${company ? ` | ${company}` : ''}
+                                ${details ? `<br><em>${details}</em>` : ''}
+                            </div>
+                        `;
+                    }
+                });
+                
+                html += '</div>';
+            }
+
+            // Add attendees
+            const attendees = document.querySelectorAll('#attendeesContainer .item-card');
+            if (attendees.length > 0) {
+                html += '<div class="section"><h3>Site Attended By</h3>';
+                
+                attendees.forEach(attendee => {
+                    const name = attendee.querySelector('[name^="attendeeName-"]')?.value;
+                    const designation = attendee.querySelector('[name^="attendeeDesignation-"]')?.value;
+                    const company = attendee.querySelector('[name^="attendeeCompany-"]')?.value;
+                    const email = attendee.querySelector('[name^="attendeeEmail-"]')?.value;
+                    const details = attendee.querySelector('[name^="attendeeDetails-"]')?.value;
+                    
+                    if (name && name.trim()) {
+                        html += `
+                            <div class="person-info">
+                                <strong>${name}</strong>
+                                ${designation ? ` - ${designation}` : ''}
+                                ${company ? ` | ${company}` : ''}
+                                ${email ? ` | ${email}` : ''}
+                                ${details ? `<br><em>${details}</em>` : ''}
+                            </div>
+                        `;
+                    }
+                });
+                
+                html += '</div>';
+            }
+
+            html += `
+    <div class="footer">
+        Generated on ${new Date().toLocaleDateString()} at ${new Date().toLocaleTimeString()}<br>
+        ABS Architects - Architecture, Buildings & Spaces
+    </div>
+</body>
+</html>`;
+
+            return html;
+        }
+
+        // Reset form
+        function resetForm() {
+            if (confirm('Are you sure you want to reset the form? All entered data will be lost.')) {
+                document.getElementById('siteVisitForm').reset();
+                
+                // Set today's date
+                const today = new Date();
+                const dateStr = today.getFullYear() + '-' + 
+                              String(today.getMonth() + 1).padStart(2, '0') + '-' + 
+                              String(today.getDate()).padStart(2, '0');
+                document.getElementById('visitDate').value = dateStr;
+
+                // Clear messages
+                document.getElementById('successMessage').classList.remove('show');
+                document.getElementById('errorMessage').classList.remove('show');
+
+                // Clear containers
+                document.getElementById('observationsContainer').innerHTML = '';
+                document.getElementById('visitorsContainer').innerHTML = '';
+                document.getElementById('attendeesContainer').innerHTML = '';
+
+                // Reset state
+                state = { observationCount: 0, visitorCount: 0, attendeeCount: 0 };
+
+                // Add initial items
+                addObservation();
+                addVisitor();
+                addAttendee();
+
+                // Reset field styles
+                document.querySelectorAll('input, textarea, select').forEach(field => {
+                    field.style.borderColor = '#e9ecef';
+                });
+            }
+        }
+
+        // Initialize when DOM is ready
+        document.addEventListener('DOMContentLoaded', init);
     </script>
 </body>
 </html>
